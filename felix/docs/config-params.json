@@ -5206,6 +5206,32 @@
           "DescriptionHTML": "<p>Continuous - Felix evaluates active flows on a regular basis to determine the rule\ntraces in the flow logs. Any policy updates that impact a flow will be reflected in the\npending_policies field, offering a near-real-time view of policy changes across flows.\nNone - Felix stops evaluating pending traces.</p>",
           "UserEditable": true,
           "GoType": "*v3.FlowLogsPolicyEvaluationModeType"
+        },
+        {
+          "Group": "Flow logs: file reports",
+          "GroupWithSortPrefix": "40 Flow logs: file reports",
+          "NameConfigFile": "FlowLogsSamplingRate",
+          "NameEnvVar": "FELIX_FlowLogsSamplingRate",
+          "NameYAML": "flowLogsSamplingRate",
+          "NameGoAPI": "FlowLogsSamplingRate",
+          "StringSchema": "Integer: [1,1000000]",
+          "StringSchemaHTML": "Integer: [1,1000000]",
+          "StringDefault": "1",
+          "ParsedDefault": "1",
+          "ParsedDefaultJSON": "1",
+          "ParsedType": "int",
+          "YAMLType": "integer",
+          "YAMLSchema": "Integer: [1,1000000]",
+          "YAMLEnumValues": null,
+          "YAMLSchemaHTML": "Integer: [1,1000000]",
+          "YAMLDefault": "1",
+          "Required": false,
+          "OnParseFailure": "ReplaceWithDefault",
+          "AllowedConfigSources": "All",
+          "Description": "Samples 1-in-N new connections into flow logs on the\niptables/nftables dataplane, reducing the CPU cost of collection at high\nconnection churn; the sampling rate is reported with each flow so consumers\ncan extrapolate. 1 disables sampling (collect every flow). The eBPF\ndataplane ignores this and always collects every flow.",
+          "DescriptionHTML": "<p>Samples 1-in-N new connections into flow logs on the\niptables/nftables dataplane, reducing the CPU cost of collection at high\nconnection churn; the sampling rate is reported with each flow so consumers\ncan extrapolate. 1 disables sampling (collect every flow). The eBPF\ndataplane ignores this and always collects every flow.</p>",
+          "UserEditable": true,
+          "GoType": "*int"
         }
       ]
     },

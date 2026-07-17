@@ -333,6 +333,12 @@ func (m matchCriteria) Limit(rate string, burst uint16) generictables.MatchCrite
 	return append(m, fmt.Sprintf("-m limit --limit %s --limit-burst %d", rate, burst))
 }
 
+// SampleOneInN matches, on average, one in every n packets, using the
+// statistic module's random mode (probability 1/n).
+func (m matchCriteria) SampleOneInN(n int) generictables.MatchCriteria {
+	return append(m, fmt.Sprintf("-m statistic --mode random --probability %.6f", 1.0/float64(n)))
+}
+
 func (m matchCriteria) InInterfaceVMAP(mapname string) generictables.MatchCriteria {
 	log.Panic("InInterfaceVMAP not supported in iptables")
 	return m

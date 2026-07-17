@@ -606,6 +606,12 @@ type FelixConfigurationSpecApplyConfiguration struct {
 	FlowLogsGoldmaneServer *string `json:"flowLogsGoldmaneServer,omitempty"`
 	// FlowLogsLocalReporter configures local unix socket for reporting flow data from each node. [Default: Disabled]
 	FlowLogsLocalReporter *string `json:"flowLogsLocalReporter,omitempty"`
+	// FlowLogsSamplingRate samples 1-in-N new connections into flow logs on the
+	// iptables/nftables dataplane, reducing the CPU cost of collection at high
+	// connection churn; the sampling rate is reported with each flow so consumers
+	// can extrapolate. 1 disables sampling (collect every flow). The eBPF
+	// dataplane ignores this and always collects every flow. [Default: 1]
+	FlowLogsSamplingRate *int `json:"flowLogsSamplingRate,omitempty"`
 	// BPFProfiling controls profiling of BPF programs. At the monent, it can be
 	// Disabled or Enabled. [Default: Disabled]
 	BPFProfiling *string `json:"bpfProfiling,omitempty"`
@@ -1985,6 +1991,14 @@ func (b *FelixConfigurationSpecApplyConfiguration) WithFlowLogsGoldmaneServer(va
 // If called multiple times, the FlowLogsLocalReporter field is set to the value of the last call.
 func (b *FelixConfigurationSpecApplyConfiguration) WithFlowLogsLocalReporter(value string) *FelixConfigurationSpecApplyConfiguration {
 	b.FlowLogsLocalReporter = &value
+	return b
+}
+
+// WithFlowLogsSamplingRate sets the FlowLogsSamplingRate field in the declarative configuration to the given value
+// and returns the receiver, so that objects can be built by chaining "With" function invocations.
+// If called multiple times, the FlowLogsSamplingRate field is set to the value of the last call.
+func (b *FelixConfigurationSpecApplyConfiguration) WithFlowLogsSamplingRate(value int) *FelixConfigurationSpecApplyConfiguration {
+	b.FlowLogsSamplingRate = &value
 	return b
 }
 

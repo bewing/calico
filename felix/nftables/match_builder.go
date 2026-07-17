@@ -544,6 +544,13 @@ func (m nftMatch) Limit(rate string, burst uint16) generictables.MatchCriteria {
 	return m
 }
 
+// SampleOneInN matches, on average, one in every n packets, using numgen's
+// random mode (a random value in [0,n) equal to 0).
+func (m nftMatch) SampleOneInN(n int) generictables.MatchCriteria {
+	m.clauses = append(m.clauses, fmt.Sprintf("numgen random mod %d == 0", n))
+	return m
+}
+
 func (m nftMatch) InInterfaceVMAP(name string) generictables.MatchCriteria {
 	m.clauses = append(m.clauses, fmt.Sprintf("iifname vmap @<LAYER>-%s", LegalizeSetName(name)))
 	return m

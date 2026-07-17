@@ -445,6 +445,7 @@ type Config struct {
 	FlowLogsGoldmaneServer       string        `config:"string;"`
 	FlowLogsLocalReporter        string        `config:"oneof(Enabled,Disabled);Disabled"`
 	FlowLogsPolicyEvaluationMode string        `config:"oneof(None,Continuous);Continuous"`
+	FlowLogsSamplingRate         int           `config:"int(1:1000000);1"`
 
 	KubeNodePortRanges    []numorstring.Port `config:"portrange-list;30000:32767"`
 	NATPortRange          numorstring.Port   `config:"portrange;"`

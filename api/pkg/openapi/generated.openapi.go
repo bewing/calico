@@ -4119,6 +4119,13 @@ func schema_pkg_apis_projectcalico_v3_FelixConfigurationSpec(ref common.Referenc
 							Format:      "",
 						},
 					},
+					"flowLogsSamplingRate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FlowLogsSamplingRate samples 1-in-N new connections into flow logs on the iptables/nftables dataplane, reducing the CPU cost of collection at high connection churn; the sampling rate is reported with each flow so consumers can extrapolate. 1 disables sampling (collect every flow). The eBPF dataplane ignores this and always collects every flow. [Default: 1]",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 					"bpfProfiling": {
 						SchemaProps: spec.SchemaProps{
 							Description: "BPFProfiling controls profiling of BPF programs. At the monent, it can be Disabled or Enabled. [Default: Disabled]",

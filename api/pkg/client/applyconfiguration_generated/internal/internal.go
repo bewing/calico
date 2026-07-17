@@ -1077,6 +1077,9 @@ var schemaYAML = typed.YAMLObject(`types:
     - name: flowLogsPolicyEvaluationMode
       type:
         scalar: string
+    - name: flowLogsSamplingRate
+      type:
+        scalar: numeric
     - name: genericXDPEnabled
       type:
         scalar: boolean

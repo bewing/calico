@@ -1956,6 +1956,11 @@ func (in *FelixConfigurationSpec) DeepCopyInto(out *FelixConfigurationSpec) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.FlowLogsSamplingRate != nil {
+		in, out := &in.FlowLogsSamplingRate, &out.FlowLogsSamplingRate
+		*out = new(int)
+		**out = **in
+	}
 	if in.RouteTableRanges != nil {
 		in, out := &in.RouteTableRanges, &out.RouteTableRanges
 		*out = new(RouteTableRanges)

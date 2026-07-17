@@ -114,4 +114,6 @@ var _ = DescribeTable("MatchBuilder",
 	// Limits.
 	Entry("Limit with rate", Match().Limit("30/second", 0), "-m limit --limit 30/second"),
 	Entry("Limit with rate and burst", Match().Limit("40/day", 5), "-m limit --limit 40/day --limit-burst 5"),
+	// Sampling.
+	Entry("SampleOneInN", Match().SampleOneInN(100), "-m statistic --mode random --probability 0.010000"),
 )

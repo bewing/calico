@@ -229,6 +229,7 @@ func StartDataplaneDriver(
 			},
 			RulesConfig: rules.Config{
 				FlowLogsEnabled:       configParams.FlowLogsEnabled(),
+				FlowLogsSamplingRate:  configParams.FlowLogsSamplingRate,
 				NFTablesMode:          configParams.NFTablesMode,
 				WorkloadIfacePrefixes: configParams.InterfacePrefixes(),
 

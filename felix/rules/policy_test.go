@@ -281,6 +281,29 @@ var _ = Describe("Protobuf rule to iptables rule conversion", func() {
 		ruleTestData,
 	)
 
+	It("should sample NFLOG rules when a sampling rate is configured", func() {
+		rrConfigNormal.FlowLogsEnabled = true
+		rrConfigNormal.FlowLogsSamplingRate = 100
+		defer func() { rrConfigNormal.FlowLogsSamplingRate = 0 }()
+		renderer := NewRenderer(rrConfigNormal, false)
+
+		rules := renderer.ProtoRuleToIptablesRules(&proto.Rule{Action: "allow"}, 4,
+			RuleOwnerTypePolicy, RuleDirIngress, 0, fooPolicyID, defaultTier, false)
+
+		var nflogMatch string
+		found := false
+		for _, rule := range rules {
+			if _, ok := rule.Action.(iptables.NflogAction); ok {
+				nflogMatch = rule.Match.Render()
+				found = true
+			}
+		}
+
+		Expect(found).To(BeTrue(), "expected an NFLOG rule to be rendered")
+		Expect(nflogMatch).To(ContainSubstring("-m conntrack --ctstate NEW"))
+		Expect(nflogMatch).To(ContainSubstring("-m statistic --mode random --probability 0.010000"))
+	})
+
 	DescribeTable(
 		"pass rules should be correctly rendered",
 		func(ipVer int, in *proto.Rule, expMatch string) {

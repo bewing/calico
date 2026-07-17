@@ -2639,6 +2639,16 @@ spec:
                     - None
                     - Continuous
                   type: string
+                flowLogsSamplingRate:
+                  description: |-
+                    FlowLogsSamplingRate samples 1-in-N new connections into flow logs on the
+                    iptables/nftables dataplane, reducing the CPU cost of collection at high
+                    connection churn; the sampling rate is reported with each flow so consumers
+                    can extrapolate. 1 disables sampling (collect every flow). The eBPF
+                    dataplane ignores this and always collects every flow. [Default: 1]
+                  maximum: 1000000
+                  minimum: 1
+                  type: integer
                 genericXDPEnabled:
                   description: |-
                     GenericXDPEnabled enables Generic XDP so network cards that don't support XDP offload or driver

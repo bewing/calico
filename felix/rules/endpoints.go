@@ -695,7 +695,7 @@ func (r *DefaultRuleRenderer) endpointIptablesChain(
 					// normal rules still to be applied to the packet in the filter table.
 					if r.FlowLogsEnabled {
 						rules = append(rules, generictables.Rule{
-							Match:  r.NewMatch().MarkClear(r.MarkPass),
+							Match:  r.withNflogSampling(r.NewMatch().MarkClear(r.MarkPass)),
 							Action: r.Nflog(nflogGroup, CalculateEndOfTierDropNFLOGPrefixStr(dir, tier.Name), 0),
 						})
 					}
@@ -713,7 +713,7 @@ func (r *DefaultRuleRenderer) endpointIptablesChain(
 					// staged), then add an end of tier pass nflog action so that we can at least track that we
 					// would hit end of tier drop. This simplifies the processing in the collector.
 					rules = append(rules, generictables.Rule{
-						Match:  r.NewMatch().MarkClear(r.MarkPass),
+						Match:  r.withNflogSampling(r.NewMatch().MarkClear(r.MarkPass)),
 						Action: r.Nflog(nflogGroup, CalculateEndOfTierPassNFLOGPrefixStr(dir, tier.Name), 0),
 					})
 				}
@@ -762,7 +762,7 @@ func (r *DefaultRuleRenderer) endpointIptablesChain(
 		// if dropIfNoProfilesMatched {
 		if r.FlowLogsEnabled {
 			rules = append(rules, generictables.Rule{
-				Match:  r.NewMatch(),
+				Match:  r.withNflogSampling(r.NewMatch()),
 				Action: r.Nflog(nflogGroup, CalculateNoMatchProfileNFLOGPrefixStr(dir), 0),
 			})
 		}

@@ -643,7 +643,7 @@ func (r *DefaultRuleRenderer) CombineMatchAndActionsForProtoRule(
 		// NFLOG the allow - we don't do this for untracked due to the performance hit.
 		if !untracked && r.FlowLogsEnabled {
 			rules = append(rules, generictables.Rule{
-				Match: r.NewMatch(),
+				Match: r.withNflogSampling(r.NewMatch()),
 				Action: r.Nflog(
 					nflogGroup,
 					CalculateNFLOGPrefixStr(RuleActionAllow, owner, dir, idx, id),
@@ -662,7 +662,7 @@ func (r *DefaultRuleRenderer) CombineMatchAndActionsForProtoRule(
 		// NFLOG the pass - we don't do this for untracked due to the performance hit.
 		if !untracked && r.FlowLogsEnabled {
 			rules = append(rules, generictables.Rule{
-				Match: r.NewMatch(),
+				Match: r.withNflogSampling(r.NewMatch()),
 				Action: r.Nflog(
 					nflogGroup,
 					CalculateNFLOGPrefixStr(RuleActionPass, owner, dir, idx, id),
@@ -680,7 +680,7 @@ func (r *DefaultRuleRenderer) CombineMatchAndActionsForProtoRule(
 		// NFLOG the deny - we don't do this for untracked due to the performance hit.
 		if !untracked && r.FlowLogsEnabled {
 			rules = append(rules, generictables.Rule{
-				Match: r.NewMatch(),
+				Match: r.withNflogSampling(r.NewMatch()),
 				Action: r.Nflog(
 					nflogGroup,
 					CalculateNFLOGPrefixStr(RuleActionDeny, owner, dir, idx, id),
@@ -719,6 +719,17 @@ func (r *DefaultRuleRenderer) CombineMatchAndActionsForProtoRule(
 	}
 
 	return finalRules
+}
+
+// withNflogSampling adds flow-log sampling to an NFLOG rule's match when a
+// sampling rate is configured, so that only ~1-in-N new connections generate a
+// notification. It is a no-op (returns the match unchanged) when sampling is
+// disabled, keeping generated rules byte-identical to the unsampled path.
+func (r *DefaultRuleRenderer) withNflogSampling(m generictables.MatchCriteria) generictables.MatchCriteria {
+	if r.FlowLogsSamplingRate > 1 {
+		return m.ConntrackState("NEW").SampleOneInN(r.FlowLogsSamplingRate)
+	}
+	return m
 }
 
 var logPrefixRE = regexp.MustCompile("%[tknp]")

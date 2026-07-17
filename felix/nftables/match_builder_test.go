@@ -131,6 +131,9 @@ var _ = DescribeTable("MatchBuilder",
 	Entry("Limit with rate", nftables.Match().Limit("10/minute", 0), "limit rate 10/minute"),
 	Entry("Limit with rate and burst", nftables.Match().Limit("20/hour", 10), "limit rate 20/hour burst 10 packets"),
 
+	// Sampling.
+	Entry("SampleOneInN", nftables.Match().SampleOneInN(100), "numgen random mod 100 == 0"),
+
 	// VMAPs
 	Entry("InInterfaceVMAP", nftables.Match().InInterfaceVMAP("vmap1234").(nftables.NFTMatchCriteria).SetLayer("filter"), "iifname vmap @filter-vmap1234"),
 	Entry("OutInterfaceVMAP", nftables.Match().OutInterfaceVMAP("vmap1234").(nftables.NFTMatchCriteria).SetLayer("raw"), "oifname vmap @raw-vmap1234"),

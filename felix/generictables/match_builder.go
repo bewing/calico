@@ -72,6 +72,9 @@ type MatchCriteria interface {
 	ICMPV6TypeAndCode(t, c uint8) MatchCriteria
 	NotICMPV6TypeAndCode(t, c uint8) MatchCriteria
 	Limit(r string, b uint16) MatchCriteria
+	// SampleOneInN matches, on average, one in every n packets using the
+	// backend's random sampler (iptables statistic, nftables numgen).
+	SampleOneInN(n int) MatchCriteria
 
 	// Only supported in nftables.
 	InInterfaceVMAP(mapname string) MatchCriteria

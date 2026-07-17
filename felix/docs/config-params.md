@@ -2888,6 +2888,23 @@ None - Felix stops evaluating pending traces.
 | `FelixConfiguration` schema | One of: <code>"Continuous"</code>, <code>"None"</code>. |
 | Default value (YAML) | `Continuous` |
 
+### `FlowLogsSamplingRate` (config file) / `flowLogsSamplingRate` (YAML)
+
+Samples 1-in-N new connections into flow logs on the
+iptables/nftables dataplane, reducing the CPU cost of collection at high
+connection churn; the sampling rate is reported with each flow so consumers
+can extrapolate. 1 disables sampling (collect every flow). The eBPF
+dataplane ignores this and always collects every flow.
+
+| Detail |   |
+| --- | --- |
+| Environment variable | `FELIX_FlowLogsSamplingRate` |
+| Encoding (env var/config file) | Integer: [1,1000000] |
+| Default value (above encoding) | `1` |
+| `FelixConfiguration` field | `flowLogsSamplingRate` (YAML) `FlowLogsSamplingRate` (Go API) |
+| `FelixConfiguration` schema | Integer: [1,1000000] |
+| Default value (YAML) | `1` |
+
 ## <a id="aws-integration">AWS integration
 
 ### `AWSSrcDstCheck` (config file) / `awsSrcDstCheck` (YAML)
