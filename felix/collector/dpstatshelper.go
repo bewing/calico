@@ -124,5 +124,17 @@ func defaultFlowAggregator(forAction rules.RuleAction, configParams *config.Conf
 		IncludeLabels(true).
 		IncludePolicies(true).
 		IncludeService(true).
+		SamplingRate(effectiveFlowLogsSamplingRate(configParams)).
 		ForAction(forAction)
+}
+
+// effectiveFlowLogsSamplingRate returns the sampling rate stamped on exported
+// flows. The eBPF dataplane collects flow logs from a ring buffer, not NFLOG,
+// so it never samples and always reports 1-in-1 regardless of the configured
+// rate.
+func effectiveFlowLogsSamplingRate(configParams *config.Config) int {
+	if configParams.BPFEnabled {
+		return 1
+	}
+	return configParams.FlowLogsSamplingRate
 }

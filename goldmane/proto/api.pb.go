@@ -1794,8 +1794,13 @@ type Flow struct {
 	// NumConnectionsLive tracks the total number of still active connections recorded for this Flow. It counts each
 	// connection that matches the FlowKey that was active at this Flow's EndTime.
 	NumConnectionsLive int64 `protobuf:"varint,12,opt,name=num_connections_live,json=numConnectionsLive,proto3" json:"num_connections_live,omitempty"`
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
+	// SamplingRate is the 1-in-N flow sampling rate this Flow was collected at (see
+	// FelixConfiguration.flowLogsSamplingRate). Each reported Flow represents approximately
+	// SamplingRate actual flows, so consumers multiply the statistics above by SamplingRate to
+	// estimate totals. 1 means no sampling. The eBPF dataplane always reports 1.
+	SamplingRate  int64 `protobuf:"varint,13,opt,name=sampling_rate,json=samplingRate,proto3" json:"sampling_rate,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Flow) Reset() {
@@ -1908,6 +1913,13 @@ func (x *Flow) GetNumConnectionsCompleted() int64 {
 func (x *Flow) GetNumConnectionsLive() int64 {
 	if x != nil {
 		return x.NumConnectionsLive
+	}
+	return 0
+}
+
+func (x *Flow) GetSamplingRate() int64 {
+	if x != nil {
+		return x.SamplingRate
 	}
 	return 0
 }
@@ -2418,7 +2430,7 @@ const file_api_proto_rawDesc = "" +
 	"\x05proto\x18\f \x01(\tR\x05proto\x12.\n" +
 	"\breporter\x18\r \x01(\x0e2\x12.goldmane.ReporterR\breporter\x12(\n" +
 	"\x06action\x18\x0e \x01(\x0e2\x10.goldmane.ActionR\x06action\x121\n" +
-	"\bpolicies\x18\x0f \x01(\v2\x15.goldmane.PolicyTraceR\bpolicies\"\xc9\x03\n" +
+	"\bpolicies\x18\x0f \x01(\v2\x15.goldmane.PolicyTraceR\bpolicies\"\xee\x03\n" +
 	"\x04Flow\x12#\n" +
 	"\x03Key\x18\x01 \x01(\v2\x11.goldmane.FlowKeyR\x03Key\x12\x1d\n" +
 	"\n" +
@@ -2436,7 +2448,8 @@ const file_api_proto_rawDesc = "" +
 	"\x17num_connections_started\x18\n" +
 	" \x01(\x03R\x15numConnectionsStarted\x12:\n" +
 	"\x19num_connections_completed\x18\v \x01(\x03R\x17numConnectionsCompleted\x120\n" +
-	"\x14num_connections_live\x18\f \x01(\x03R\x12numConnectionsLive\"\x8f\x01\n" +
+	"\x14num_connections_live\x18\f \x01(\x03R\x12numConnectionsLive\x12#\n" +
+	"\rsampling_rate\x18\r \x01(\x03R\fsamplingRate\"\x8f\x01\n" +
 	"\vPolicyTrace\x12@\n" +
 	"\x11enforced_policies\x18\x01 \x03(\v2\x13.goldmane.PolicyHitR\x10enforcedPolicies\x12>\n" +
 	"\x10pending_policies\x18\x02 \x03(\v2\x13.goldmane.PolicyHitR\x0fpendingPolicies\"\x96\x02\n" +

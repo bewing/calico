@@ -708,6 +708,22 @@ var _ = Describe("Flow log aggregator tests", func() {
 			flowLog := messages[0]
 			Expect(flowLog.NumFlowsStarted).Should(Equal(1))
 		})
+
+		It("Stamps the configured sampling rate on emitted flow logs", func() {
+			ca := NewAggregator().ForAction(rules.RuleActionAllow).SamplingRate(100)
+			Expect(ca.FeedUpdate(&muConn1Rule1HTTPReqAllowUpdate)).NotTo(HaveOccurred())
+			messages := ca.GetAndCalibrate()
+			Expect(len(messages)).Should(Equal(1))
+			Expect(messages[0].SamplingRate).Should(Equal(100))
+		})
+
+		It("Defaults the sampling rate to 1 (no sampling)", func() {
+			ca := NewAggregator().ForAction(rules.RuleActionAllow)
+			Expect(ca.FeedUpdate(&muConn1Rule1HTTPReqAllowUpdate)).NotTo(HaveOccurred())
+			messages := ca.GetAndCalibrate()
+			Expect(len(messages)).Should(Equal(1))
+			Expect(messages[0].SamplingRate).Should(Equal(1))
+		})
 	})
 
 	Context("Flow log aggregator flowstore lifecycle", func() {

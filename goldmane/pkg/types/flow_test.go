@@ -77,6 +77,7 @@ func TestTranslation(t *testing.T) {
 				NumConnectionsStarted:   131415,
 				NumConnectionsCompleted: 161718,
 				NumConnectionsLive:      192021,
+				SamplingRate:            100,
 			},
 		},
 	}

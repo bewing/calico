@@ -153,6 +153,7 @@ type Flow struct {
 	NumConnectionsStarted   int64
 	NumConnectionsCompleted int64
 	NumConnectionsLive      int64
+	SamplingRate            int64
 }
 
 type PolicyTrace struct {
@@ -208,6 +209,7 @@ func ProtoToFlow(p *proto.Flow) *Flow {
 		NumConnectionsStarted:   p.NumConnectionsStarted,
 		NumConnectionsCompleted: p.NumConnectionsCompleted,
 		NumConnectionsLive:      p.NumConnectionsLive,
+		SamplingRate:            p.SamplingRate,
 	}
 }
 
@@ -283,6 +285,7 @@ func FlowIntoProto(f *Flow, pf *proto.Flow) {
 	pf.NumConnectionsStarted = f.NumConnectionsStarted
 	pf.NumConnectionsCompleted = f.NumConnectionsCompleted
 	pf.NumConnectionsLive = f.NumConnectionsLive
+	pf.SamplingRate = f.SamplingRate
 }
 
 func flowKeyIntoProto(k *FlowKey, pfk *proto.FlowKey) {
@@ -332,6 +335,7 @@ func FlowToProto(f *Flow) *proto.Flow {
 		NumConnectionsStarted:   f.NumConnectionsStarted,
 		NumConnectionsCompleted: f.NumConnectionsCompleted,
 		NumConnectionsLive:      f.NumConnectionsLive,
+		SamplingRate:            f.SamplingRate,
 	}
 }
 

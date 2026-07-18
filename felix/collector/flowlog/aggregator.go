@@ -68,6 +68,7 @@ type Aggregator struct {
 	aggregationStartTime  time.Time
 	handledAction         rules.RuleAction
 	displayDebugTraceLogs bool
+	samplingRate          int
 }
 
 type flowEntry struct {
@@ -83,7 +84,13 @@ func NewAggregator() *Aggregator {
 		flowStore:            make(map[FlowMeta]*flowEntry),
 		flMutex:              sync.RWMutex{},
 		aggregationStartTime: time.Now(),
+		samplingRate:         1,
 	}
+}
+
+func (a *Aggregator) SamplingRate(rate int) *Aggregator {
+	a.samplingRate = rate
+	return a
 }
 
 func (a *Aggregator) DisplayDebugTraceLogs(b bool) *Aggregator {
@@ -179,6 +186,9 @@ func (a *Aggregator) GetAndCalibrate() []*FlowLog {
 		if flowEntry.shouldExport {
 			log.Debug("Converting to flowlogs")
 			flowLogs := flowEntry.spec.ToFlowLogs(flowMeta, a.aggregationStartTime, aggregationEndTime, a.includeLabels, a.includePolicies)
+			for _, fl := range flowLogs {
+				fl.SamplingRate = a.samplingRate
+			}
 			resp = append(resp, flowLogs...)
 		}
 		a.calibrateFlowStore(flowMeta, a.current)

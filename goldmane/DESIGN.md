@@ -84,6 +84,15 @@ Felix (per-node) --gRPC--> FlowCollector --> Goldmane main loop --> BucketRing
 - **Emitter** — batches aggregated flows and pushes them to an
   upstream endpoint over HTTPS with mTLS. Tracks progress in a
   `ConfigMap` (`flow-emitter-state` in `calico-system`).
+- **Flow sampling** — Felix sets a 1-in-N sampling rate in
+  `Flow.sampling_rate` on the flows it emits (iptables/nftables
+  only; 1 = unsampled, eBPF always 1). Goldmane ingests it into
+  `types.Flow`, but `BucketRing` aggregation (`Window`) neither
+  retains nor scales by it, so `Flows`/`Statistics` query output
+  does not carry it — applying the multiplier per-flow before
+  summing is future work. Consumers reading a per-flow stream
+  directly (e.g. Felix's local socket reporter) see the rate. See
+  [`felix/design/flow-logs-collector.md`](../felix/design/flow-logs-collector.md).
 
 ### Review notes
 

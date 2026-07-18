@@ -574,4 +574,8 @@ type FlowLog struct {
 	FlowProcessReportedStats
 
 	FlowEnforcedPolicySet, FlowPendingPolicySet FlowPolicySet
+
+	// SamplingRate is the 1-in-N flow sampling rate this flow was collected at.
+	// Reported to consumers so they can extrapolate counts. 1 means no sampling.
+	SamplingRate int
 }

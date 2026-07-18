@@ -156,6 +156,8 @@ func ConvertFlowlogToGoldmane(fl *flowlog.FlowLog) *types.Flow {
 		NumConnectionsStarted:   int64(fl.NumFlowsStarted),
 		NumConnectionsCompleted: int64(fl.NumFlowsCompleted),
 
+		SamplingRate: int64(fl.SamplingRate),
+
 		SourceLabels: ensureLabels(fl.SrcLabels),
 		DestLabels:   ensureLabels(fl.DstLabels),
 	}
@@ -173,6 +175,7 @@ func ConvertGoldmaneToFlowlog(gl *proto.Flow) flowlog.FlowLog {
 	fl.NumFlows = int(gl.NumConnectionsLive)
 	fl.NumFlowsStarted = int(gl.NumConnectionsStarted)
 	fl.NumFlowsCompleted = int(gl.NumConnectionsCompleted)
+	fl.SamplingRate = int(gl.SamplingRate)
 
 	fl.SrcLabels = ensureFlowLogLabels(gl.SourceLabels)
 	fl.DstLabels = ensureFlowLogLabels(gl.DestLabels)
